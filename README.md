@@ -93,6 +93,10 @@ graph = Graph(name="bCMS_SR_Witness", nodes=N.all, edges=E.all)
 
 ## Methods
 
+### Optimization
+
+Optimization is performed using differential evolution
+![DE](_img/de.png)
 
 
 ## Install
