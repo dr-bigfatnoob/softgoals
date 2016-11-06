@@ -98,9 +98,54 @@ graph = Graph(name="bCMS_SR_Witness", nodes=N.all, edges=E.all)
 Optimization is performed using differential evolution
 ![DE](_img/de.png)
 
+### Support Based Ranking
+
+We first rank the decisions usingKruns of the differential evolution algorithm. The Kruns aredivided based on Non Dominated Sorting into
+
+* _best_: Points associated with the top BEST% points.
+* _rest_: Points that are not included in best.
+
+The algorithm then computes the probability that a decision is found in _best_ using Bayes Theorem. Informally, the theorem says that _** posterior = prior * likelihood **_ More formally:
+
+```
+P(H|E)=P(E|H) * P(H) / P(E)
+```
+
+i.e using evidence E and a prior probability P(H) for hypothesis H ∈ {_best_, _rest_}. The theorem calculates the posterior probabilityP(H|E). When applying the theorem, likelihoods are computed from observed frequencies, then normalized to create probabilities (this normalization cancels outP(E)in Eq. 4.2, so it need not becomputed). For example after K=10,000 runs divide into 1,000 lowest 10% _best_ solutions and 9,000 _rest_, the decision X=x might appear 10 times in the best solutions, butonly 5 times in the _rest_. This can be formulated as follows:
+
+```
+E = (X=x)
+P(best) = 1000/10000 = 0.1
+P(rest) = 9000/10000 = 0.9
+freq(E|best) = 10/1000 = 0.01
+freq(E|rest) = 5/9000 = 0.00056 
+like(best|E) = freq(E|best) * P(best) = 0.001
+like(rest|E) = freq(E|rest) * P(rest) = 0.00050
+P(best|E) = like(best|E) / (like(best|E) + like(rest|E))
+P(best|E) * support(best|E) = like(best|E)^2 / (like(best|E) + like(rest|E))
+```
+
+### Star1 Algorithm
+
+* **SAMPLE**: To sample the decisions form the models, STAR1 runs the Differential Evolution algorithm K1times.
+* **CLASSIFY**: The outcomes of the runs are then ranked into those seen in BEST% as _best_ and the remaining into rest.
+* **RANK**: The decisions along with their optimal values are then ranked using Non Dominated Sorting in the decreasing order by their probability * support of appearing in thebest outcomes.
+* **PRUNE**: The algorithm then runs K2 experiments with the models where the top ranked decisions between 1...X are pre-set to their optimal value as computed on the previous step. The remaining decisions are assigned random values. This step is crucial as we identify the significance of each decision and its contribution towards the satisfaction of the model's objectives.
+* **REPORT**: The algorithm finally plots the median and Inter-Quartile Range(IQR) for each ofthe 1 . . .X decisions which the analyst can use to identify the significance of the decisions.
+
 
 ## Install
 
+1  Setup the dependencies using pip
+```
+pip install -r requirements.txt
+```
+2  To run steps for a model
+* Preset models in runner.sh
+* Run the following command
+```
+sh runner.sh
+```
 
 ## References
 1. [Horkoff, Jennifer, and Eric Yu. "Evaluating goal achievement in enterprise modeling–an interactive procedure and experiences." IFIP Working Conference on The Practice of Enterprise Modeling. Springer Berlin Heidelberg, 2009.](http://www.cs.toronto.edu/pub/eric/PoEM09-JH.pdf)
