@@ -297,7 +297,7 @@ def plot_runtimes():
   plt.tight_layout()
   plt.savefig("sg_runtimes.png")
 
-plot_runtimes()
+# plot_runtimes()
 # if __name__ == "__main__":
 #   from pystar.models.dot_models import CSCounsellingManagement
 #   run(CSCounsellingManagement(), "correction2")
