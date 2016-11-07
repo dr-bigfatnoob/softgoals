@@ -147,8 +147,9 @@ pip install -r requirements.txt
 ```
 sh runner.sh
 ```
-3 The output will be saved in ```weekly-reports/<date>/<folder-name>/<model_name>.md```
-4 You would need a markdown previewer for viewing the model results.
+3  The output will be saved in ```weekly-reports/<date>/<folder-name>/<model_name>.md```
+
+4  You would need a markdown previewer for viewing the model results.
 
 ## References
 1. [Horkoff, Jennifer, and Eric Yu. "Evaluating goal achievement in enterprise modeling–an interactive procedure and experiences." IFIP Working Conference on The Practice of Enterprise Modeling. Springer Berlin Heidelberg, 2009.](http://www.cs.toronto.edu/pub/eric/PoEM09-JH.pdf)
